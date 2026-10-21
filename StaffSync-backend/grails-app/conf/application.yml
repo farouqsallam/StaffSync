@@ -3,7 +3,32 @@ info:
     name: '@info.app.name@'
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
+spring:
+  jmx:
+    unique-names: true
+  main:
+    banner-mode: "off"
+  groovy:
+    template:
+      check-template-location: false
+  devtools:
+    restart:
+      additional-exclude:
+        - '*.gsp'
+        - '**/*.gsp'
+        - '*.gson'
+        - '**/*.gson'
+        - 'logback.xml'
+        - '*.properties'
+management:
+  endpoints:
+    jmx:
+      unique-names: true
+
 grails:
+  profile: web
+  codegen:
+    defaultPackage: StaffSync
   mime:
     types:
       all: '*/*'
@@ -12,52 +37,135 @@ grails:
       csv: text/csv
       form: application/x-www-form-urlencoded
       html:
-      - text/html
-      - application/xhtml+xml
+        - text/html
+        - application/xhtml+xml
       js: text/javascript
       json:
-      - application/json
-      - text/json
+        - application/json
+        - text/json
       multipartForm: multipart/form-data
       pdf: application/pdf
       rss: application/rss+xml
       text: text/plain
       hal:
-      - application/hal+json
-      - application/hal+xml
+        - application/hal+json
+        - application/hal+xml
       xml:
-      - text/xml
-      - application/xml
-  views:
-    gsp:
-      encoding: UTF-8
-      htmlcodec: xml
-      codecs:
-        scriptlet: html
-  codegen:
-    defaultPackage: StaffSync
-  profile: web
-dataSource:
-  driverClassName: org.h2.Driver
-  username: sa
-  password: ''
-  pooled: true
-  jmxExport: true
-environments:
-  development:
-    dataSource:
-      dbCreate: create-drop
-      url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
-  test:
-    dataSource:
-      dbCreate: update
-      url: jdbc:h2:mem:testDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
-  production:
-    dataSource:
-      dbCreate: none
-      url: jdbc:h2:./prodDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+        - text/xml
+        - application/xml
+  cors:
+    enabled: true
+    allowedOrigins:
+      - 'http://localhost:5173' # Your Vue Vite port
+    allowedMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowedHeaders:
+      - Origin
+      - Accept
+      - Content-Type
+      - Authorization
+  plugin:
+
+    springsecurity:
+      userLookup:
+        userDomainClassName: 'StaffSync.User'
+        authorityJoinClassName: 'StaffSync.UserRole'
+      authority:
+        className: 'StaffSync.Role'
+      password:
+        algorithm: 'bcrypt'
+      rest:
+        token:
+          validation:
+            useBearerToken: true
+            enableAnonymousAccess: true
+          storage:
+            jwt:
+              # Must be a long, secure base64 string
+              secret: 'qrD6h8K6S95mFB+A/r1z7Xv9YqE2p3N4m5L6k7J8H9G0F1D2S3A4F5G6H7J8K9L0'
+              expiration: 86400 # 24 hours
+      filterChain:
+        chainMap:
+          # Apply stateless REST filters to login and API endpoints
+          - pattern: '/api/login'
+            filters: 'JOINED_FILTERS,-restTokenValidationFilter,-restExceptionTranslationFilter'
+          - pattern: '/**'
+            filters: 'JOINED_FILTERS,-exceptionTranslationFilter,-authenticationProcessingFilter,-securityContextPersistenceFilter,-rememberMeAuthenticationFilter'
+      interceptUrlMap:
+        # 1. Public Endpoints
+        - pattern: '/api/login'
+          access: ['permitAll']
+        - pattern: '/'
+          access: ['permitAll']
+        - pattern: '/error'
+          access: ['permitAll']
+
+        # 2. Admin-Only Endpoints
+        - pattern: '/users'        # Add this line
+          access: ['ROLE_ADMIN']
+        - pattern: '/users/**'
+          access: ['ROLE_ADMIN']
+        - pattern: '/departments'  # Add this line
+          access: ['ROLE_ADMIN']
+        - pattern: '/departments/**'
+          access: ['ROLE_ADMIN']
+
+        # 3. Mixed Endpoints
+        - pattern: '/tasks'
+          access: [ 'ROLE_ADMIN', 'ROLE_EMPLOYEE' ]
+        - pattern: '/tasks/'
+          access: [ 'ROLE_ADMIN', 'ROLE_EMPLOYEE' ]
+        - pattern: '/tasks/**'
+          access: [ 'ROLE_ADMIN', 'ROLE_EMPLOYEE' ]
 hibernate:
   cache:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
+
+# Base PostgreSQL Configuration
+dataSource:
+  pooled: true
+  jmxExport: true
+  driverClassName: org.postgresql.Driver
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  username: postgres
+  password: "secretpassword"
+
+environments:
+  development:
+    dataSource:
+      dbCreate: update
+      url: jdbc:postgresql://localhost:5432/staffsync_db
+  test:
+    dataSource:
+      dbCreate: update
+      driverClassName: org.h2.Driver
+      dialect: org.hibernate.dialect.H2Dialect
+      url: jdbc:h2:mem:testDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+  production:
+    dataSource:
+      dbCreate: none
+      url: jdbc:postgresql://localhost:5432/staffsync_db
+      properties:
+        jmxEnabled: true
+        initialSize: 5
+        maxActive: 50
+        minIdle: 5
+        maxIdle: 25
+        maxWait: 10000
+        maxAge: 600000
+        timeBetweenEvictionRunsMillis: 5000
+        minEvictableIdleTimeMillis: 60000
+        validationQuery: SELECT 1
+        validationQueryTimeout: 3
+        validationInterval: 15000
+        testOnBorrow: true
+        testWhileIdle: true
+        testOnReturn: false
+        jdbcInterceptors: ConnectionState
+        defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED

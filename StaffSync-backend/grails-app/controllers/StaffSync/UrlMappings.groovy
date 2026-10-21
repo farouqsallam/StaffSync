@@ -2,16 +2,12 @@ package StaffSync
 
 class UrlMappings {
     static mappings = {
-        "/$namespace/$controller/$action?/$id?(.$format)?" {}
-        "/$controller/$action?/$id?(.$format)?"{
-            constraints {
-                // apply constraints here
-            }
-        }
+        "/tasks"(resources: 'task')
+        "/departments"(resources: 'department')
+        "/users"(resources: 'user')
 
-        "/"(view:"/index")
-        "500"(view:'/error')
-        "404"(view:'/notFound')
-
+        "/"(view: '/index')
+        "500"(view: '/error')
+        "404"(view: '/404')
     }
 }
