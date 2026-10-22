@@ -11,10 +11,10 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
-    "@primevue/themes": "^4.5.4",
+    "@vee-validate/rules": "^4.15.1",
+    "axios": "^1.20.0",
     "chart.js": "^4.5.1",
     "pinia": "^4.1.0",
-    "primevue": "^5.0.2",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.42",
     "vue-router": "^5.4.0"
