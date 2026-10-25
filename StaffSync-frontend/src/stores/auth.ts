@@ -98,7 +98,9 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('roles', JSON.stringify(parsedRoles))
 
       const userData: User = data.user || {
-        username: credentials.username,
+        id: data.id || data.userId,
+        username: data.username || credentials.username,
+        email: data.email,
         roles: parsedRoles,
         ...(parsedRoles.length > 0 ? { role: parsedRoles[0] } : {}),
       }

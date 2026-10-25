@@ -10,4 +10,21 @@ class UserController extends RestfulController<User> {
     UserController() {
         super(User)
     }
+    @Override
+    def index(Integer max) {
+        // Handle pagination defaults
+        params.max = Math.min(max ?: 10, 100)
+
+        if (params.departmentId) {
+            // Efficiently query users by department ID using a GORM Where query
+            def usersList = User.where {
+                department.id == params.departmentId.toLong()
+            }.list(params)
+
+            respond usersList
+        } else {
+            // Fall back to the default RestfulController behavior (return all)
+            super.index(max)
+        }
+    }
 }
