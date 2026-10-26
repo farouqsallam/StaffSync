@@ -107,52 +107,81 @@ function mapTask(t: any): EmployeeTask {
   }
 }
 
-// Check if task is assigned to currently logged-in user
-function isTaskAssignedToMe(t: any): boolean {
-  const currentUserId = authStore.user?.id
-  const currentUsername = authStore.user?.username?.toLowerCase()
-
-  // If assignedTo has IDs
-  const assignedList = normalizeAssignedTo(t.assignedTo)
-  if (currentUserId != null && assignedList.some((id) => String(id) === String(currentUserId))) {
-    return true
+// Resolve employee id from store or JWT token (never calls /users as employee cannot access it)
+function getEmployeeId(): string | number | null {
+  if (authStore.user?.userId != null && authStore.user.userId !== '') {
+    return authStore.user.userId
+  }
+  if (authStore.user?.id != null && authStore.user.id !== '') {
+    return authStore.user.id
   }
 
-  // Check username match if present
-  if (currentUsername) {
-    if (assignedList.some((id) => String(id).toLowerCase() === currentUsername)) {
-      return true
-    }
-    if (typeof t.assignedTo === 'object' && t.assignedTo?.username) {
-      if (t.assignedTo.username.toLowerCase() === currentUsername) return true
+  const storedUserId = localStorage.getItem('userId')
+  if (storedUserId) {
+    return storedUserId
+  }
+
+  // Fallback: check stored JWT token claims directly
+  const token = authStore.token || localStorage.getItem('token') || localStorage.getItem('access_token')
+  if (token) {
+    try {
+      const parts = token.split('.')
+      if (parts.length >= 2 && parts[1]) {
+        const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join(''),
+        )
+        const payload = JSON.parse(jsonPayload)
+        const extracted =
+          payload.userId ??
+          payload.id ??
+          payload.user_id ??
+          payload.employeeId ??
+          (payload.sub && !isNaN(Number(payload.sub)) ? payload.sub : null)
+        if (extracted != null && extracted !== '') {
+          if (authStore.user) {
+            authStore.user.userId = extracted
+            authStore.user.id = extracted
+            localStorage.setItem('user', JSON.stringify(authStore.user))
+          }
+          return extracted
+        }
+      }
+    } catch {
+      // ignore
     }
   }
 
-  // If only 1 employee user or no specific id, check if t.assignedTo matches
-  return false
+  return null
 }
 
-// API - Only touches /tasks
+// API - Fetch employee tasks from /users/${userID}/tasks
 async function fetchMyTasks() {
   isLoading.value = true
   try {
-    const res = await apiClient.get('/tasks')
-    const rawList = Array.isArray(res.data) ? res.data : []
-    const mapped = rawList.map((t: any) => mapTask(t))
-
-    // Filter to only tasks assigned to the current employee
-    const filtered = mapped.filter((t) => isTaskAssignedToMe(t))
-
-    // If filtering produced no tasks (e.g. backend ID mapping differs or fresh session),
-    // and there are tasks returned, show tasks where assignedTo is empty or fallback to all
-    if (filtered.length === 0 && mapped.length > 0 && !authStore.user?.id) {
-      // If user has no ID stored, display tasks to ensure visibility
-      tasks.value = mapped
-    } else {
-      tasks.value = filtered
+    const employeeId = getEmployeeId()
+    if (!employeeId) {
+      console.warn('Could not determine employee ID for /users/{userID}/tasks')
+      showToast('Could not find employee ID. Please try logging in again.', 'danger')
+      tasks.value = []
+      return
     }
+
+    const res = await apiClient.get(`/users/${employeeId}/tasks`)
+    const rawList = Array.isArray(res.data)
+      ? res.data
+      : Array.isArray(res.data?.tasks)
+        ? res.data.tasks
+        : Array.isArray(res.data?.data)
+          ? res.data.data
+          : []
+
+    tasks.value = rawList.map((t: any) => mapTask(t))
   } catch (err: any) {
-    console.error('Failed to fetch /tasks:', err)
+    console.error('Failed to fetch employee tasks from /users/{userID}/tasks:', err)
     showToast('Failed to load your tasks from server.', 'danger')
   } finally {
     isLoading.value = false
@@ -223,7 +252,8 @@ function openEditModal(task: EmployeeTask) {
 async function handleSaveTask() {
   if (!taskForm.value.title.trim()) return
 
-  const currentUserId = authStore.user?.id || authStore.user?.username || '1'
+  const employeeId = getEmployeeId()
+  const currentUserId = employeeId || authStore.user?.id || authStore.user?.username || '1'
   const payload: any = {
     title: taskForm.value.title.trim(),
     description: taskForm.value.description.trim(),

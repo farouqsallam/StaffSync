@@ -4,6 +4,7 @@ import apiClient from '@/services/api'
 
 export interface User {
   id?: string | number
+  userId?: string | number
   username?: string
   email?: string
   role?: string
@@ -16,11 +17,56 @@ export interface LoginCredentials {
   password: string
 }
 
+export function parseJwt(token: string): any {
+  try {
+    const parts = token.split('.')
+    if (parts.length >= 2 && parts[1]) {
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(''),
+      )
+      return JSON.parse(jsonPayload)
+    }
+  } catch {
+    // ignore
+  }
+  return null
+}
+
 function getStoredUser(): User | null {
   const savedUser = localStorage.getItem('user')
+  const savedUserId = localStorage.getItem('userId')
   if (savedUser) {
     try {
-      return JSON.parse(savedUser)
+      const parsed = JSON.parse(savedUser)
+      if (parsed) {
+        if (!parsed.userId && savedUserId) {
+          parsed.userId = savedUserId
+        }
+        if (!parsed.id && (parsed.userId || savedUserId)) {
+          parsed.id = parsed.userId || savedUserId
+        }
+        if (!parsed.userId && !parsed.id) {
+          const token = localStorage.getItem('token') || localStorage.getItem('access_token')
+          if (token) {
+            const payload = parseJwt(token)
+            const extractedId =
+              payload?.userId ??
+              payload?.id ??
+              payload?.user_id ??
+              payload?.employeeId ??
+              (payload?.sub && !isNaN(Number(payload.sub)) ? payload.sub : null)
+            if (extractedId != null) {
+              parsed.id = extractedId
+              parsed.userId = extractedId
+            }
+          }
+        }
+      }
+      return parsed
     } catch {
       return null
     }
@@ -97,10 +143,31 @@ export const useAuthStore = defineStore('auth', () => {
       roles.value = parsedRoles
       localStorage.setItem('roles', JSON.stringify(parsedRoles))
 
-      const userData: User = data.user || {
-        id: data.id || data.userId,
-        username: data.username || credentials.username,
-        email: data.email,
+      const tokenPayload = receivedToken ? parseJwt(receivedToken) : null
+      const resolvedUserId =
+        data.userId ??
+        data.id ??
+        data.employeeId ??
+        data.user?.userId ??
+        data.user?.id ??
+        data.user?.employeeId ??
+        tokenPayload?.userId ??
+        tokenPayload?.id ??
+        tokenPayload?.user_id ??
+        tokenPayload?.employeeId ??
+        (tokenPayload?.sub && !isNaN(Number(tokenPayload.sub)) ? tokenPayload.sub : null) ??
+        null
+
+      if (resolvedUserId != null) {
+        localStorage.setItem('userId', String(resolvedUserId))
+      }
+
+      const userData: User = {
+        ...(typeof data.user === 'object' && data.user ? data.user : {}),
+        id: resolvedUserId,
+        userId: resolvedUserId,
+        username: data.user?.username || data.username || credentials.username,
+        email: data.user?.email || data.email,
         roles: parsedRoles,
         ...(parsedRoles.length > 0 ? { role: parsedRoles[0] } : {}),
       }
@@ -139,6 +206,7 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('token')
     localStorage.removeItem('access_token')
     localStorage.removeItem('user')
+    localStorage.removeItem('userId')
     localStorage.removeItem('roles')
   }
 
