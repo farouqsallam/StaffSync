@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useAdminDataStore, type AdminUser } from '@/stores/adminData'
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps<{
   isOpen: boolean
@@ -20,11 +21,13 @@ const emit = defineEmits<{
       jobTitle: string
       enabled: boolean
       department?: any
+      role?: 'ROLE_EMPLOYEE' | 'ROLE_ADMIN' | string
     },
   ): void
 }>()
 
 const adminStore = useAdminDataStore()
+const authStore = useAuthStore()
 
 const form = ref<{
   username: string
@@ -34,6 +37,7 @@ const form = ref<{
   jobTitle: string
   enabled: boolean
   departmentId: string | number
+  role: 'ROLE_EMPLOYEE' | 'ROLE_ADMIN'
 }>({
   username: '',
   password: '',
@@ -42,7 +46,20 @@ const form = ref<{
   jobTitle: '',
   enabled: true,
   departmentId: '',
+  role: 'ROLE_EMPLOYEE',
 })
+
+function getInitialRole(user: any): 'ROLE_EMPLOYEE' | 'ROLE_ADMIN' {
+  if (!user) return 'ROLE_EMPLOYEE'
+  if (user.role === 'ROLE_ADMIN' || user.systemRole === 'ROLE_ADMIN' || user.role === 'ADMIN') return 'ROLE_ADMIN'
+  if (Array.isArray(user.roles) && user.roles.some((r: any) => (typeof r === 'string' ? r : r.name || r.role || r.authority) === 'ROLE_ADMIN')) {
+    return 'ROLE_ADMIN'
+  }
+  if (Array.isArray(user.authorities) && user.authorities.some((a: any) => (typeof a === 'string' ? a : a.authority || a.role) === 'ROLE_ADMIN')) {
+    return 'ROLE_ADMIN'
+  }
+  return 'ROLE_EMPLOYEE'
+}
 
 watch(
   () => [props.userToEdit, props.defaultDepartmentId, props.isOpen],
@@ -53,9 +70,10 @@ watch(
         password: '',
         fullName: props.userToEdit.fullName || props.userToEdit.name || '',
         email: props.userToEdit.email || '',
-        jobTitle: props.userToEdit.jobTitle || props.userToEdit.role || '',
+        jobTitle: props.userToEdit.jobTitle || (props.userToEdit.role !== 'ROLE_ADMIN' && props.userToEdit.role !== 'ROLE_EMPLOYEE' ? props.userToEdit.role : '') || '',
         enabled: props.userToEdit.enabled !== false,
         departmentId: props.userToEdit.departmentId || adminStore.departments[0]?.id || '',
+        role: getInitialRole(props.userToEdit),
       }
     } else {
       const firstDeptId = props.defaultDepartmentId || adminStore.departments[0]?.id || ''
@@ -67,6 +85,7 @@ watch(
         jobTitle: '',
         enabled: true,
         departmentId: firstDeptId,
+        role: 'ROLE_EMPLOYEE',
       }
     }
   },
@@ -83,6 +102,13 @@ function handleSubmit() {
     jobTitle: form.value.jobTitle.trim() || 'Team Member',
     enabled: form.value.enabled,
     department: form.value.departmentId || null,
+  }
+
+  // Role key in payload (ROLE_EMPLOYEE / ROLE_ADMIN) - accessible by admins only
+  if (authStore.isAdmin) {
+    payload.role = form.value.role
+  } else if (!props.userToEdit) {
+    payload.role = 'ROLE_EMPLOYEE'
   }
 
   if (!props.userToEdit || form.value.password.trim()) {
@@ -225,6 +251,102 @@ function handleSubmit() {
                 {{ dept.name }} ({{ dept.code }})
               </option>
             </select>
+          </div>
+        </div>
+
+        <!-- System Role Selection / Toggle (Accessible by Admins only) -->
+        <div
+          v-if="authStore.isAdmin"
+          class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-3"
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-900 dark:text-white">Role & Permissions</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  ADMIN ONLY
+                </span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Toggle authority level between Employee and Administrator</div>
+            </div>
+
+            <!-- Segmented Quick Toggle -->
+            <div class="inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-slate-900/80 border border-slate-300/60 dark:border-slate-700">
+              <button
+                type="button"
+                @click="form.role = 'ROLE_EMPLOYEE'"
+                class="px-3 py-1 rounded-lg text-xs font-semibold transition-all duration-200"
+                :class="form.role === 'ROLE_EMPLOYEE' ? 'bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'"
+              >
+                Employee
+              </button>
+              <button
+                type="button"
+                @click="form.role = 'ROLE_ADMIN'"
+                class="px-3 py-1 rounded-lg text-xs font-semibold transition-all duration-200"
+                :class="form.role === 'ROLE_ADMIN' ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'"
+              >
+                Admin
+              </button>
+            </div>
+          </div>
+
+          <!-- Role Option Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              @click="form.role = 'ROLE_EMPLOYEE'"
+              class="relative flex items-start gap-3 p-3 rounded-xl border text-left transition-all"
+              :class="form.role === 'ROLE_EMPLOYEE' 
+                ? 'bg-teal-500/10 border-teal-500/50 ring-1 ring-teal-500/40' 
+                : 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/60 hover:border-slate-300 dark:hover:border-slate-600'"
+            >
+              <div
+                class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                :class="form.role === 'ROLE_EMPLOYEE' ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-900 dark:text-white">Employee</span>
+                  <span class="text-[10px] font-mono font-medium text-teal-600 dark:text-teal-400">ROLE_EMPLOYEE</span>
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Standard member access to tasks & dashboard
+                </p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              @click="form.role = 'ROLE_ADMIN'"
+              class="relative flex items-start gap-3 p-3 rounded-xl border text-left transition-all"
+              :class="form.role === 'ROLE_ADMIN' 
+                ? 'bg-indigo-500/10 border-indigo-500/50 ring-1 ring-indigo-500/40' 
+                : 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/60 hover:border-slate-300 dark:hover:border-slate-600'"
+            >
+              <div
+                class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                :class="form.role === 'ROLE_ADMIN' ? 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-900 dark:text-white">Administrator</span>
+                  <span class="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-400">ROLE_ADMIN</span>
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Full administrative permissions & management
+                </p>
+              </div>
+            </button>
           </div>
         </div>
 

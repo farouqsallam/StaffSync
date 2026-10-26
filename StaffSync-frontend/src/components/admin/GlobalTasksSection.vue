@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAdminDataStore, type AdminTask } from '@/stores/adminData'
+import {
+  useAdminDataStore,
+  getInitials,
+  getAvatarColor,
+  type AdminTask,
+} from '@/stores/adminData'
 
 const emit = defineEmits<{
   (e: 'addTask'): void
@@ -59,13 +64,6 @@ function getAssigneeName(task: AdminTask): string {
   if (!firstId) return 'Unassigned'
   const user = adminStore.getUserById(firstId)
   return user?.name || `User #${firstId}`
-}
-
-function getAssigneeAvatar(task: AdminTask): string {
-  const firstId = task.assignedTo && task.assignedTo.length > 0 ? task.assignedTo[0] : task.userId
-  if (!firstId) return ''
-  const user = adminStore.getUserById(firstId)
-  return user?.avatarUrl || ''
 }
 </script>
 
@@ -137,17 +135,11 @@ function getAssigneeAvatar(task: AdminTask): string {
               </td>
               <td class="py-4 px-4">
                 <div class="flex items-center gap-2">
-                  <img
-                    v-if="getAssigneeAvatar(task)"
-                    :src="getAssigneeAvatar(task)"
-                    alt=""
-                    class="w-7 h-7 rounded-full object-cover"
-                  />
                   <div
-                    v-else
-                    class="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-300"
+                    class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border select-none shrink-0"
+                    :class="getAvatarColor(getAssigneeName(task))"
                   >
-                    {{ getAssigneeName(task).charAt(0) }}
+                    {{ getInitials(getAssigneeName(task)) }}
                   </div>
                   <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">
                     {{ getAssigneeName(task) }}

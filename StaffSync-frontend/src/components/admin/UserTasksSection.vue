@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAdminDataStore, type Department, type AdminUser, type AdminTask } from '@/stores/adminData'
+import {
+  useAdminDataStore,
+  getInitials,
+  getAvatarColor,
+  type Department,
+  type AdminUser,
+  type AdminTask,
+} from '@/stores/adminData'
 
 const props = defineProps<{
   user: AdminUser
@@ -73,11 +80,12 @@ function getStatusBadgeClass(status: AdminTask['status']) {
     <!-- Active User Dossier Banner -->
     <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div class="flex items-start gap-4">
-        <img
-          :src="user.avatarUrl"
-          :alt="user.name"
-          class="w-16 h-16 rounded-3xl object-cover border-2 border-emerald-500/30 shadow-md shrink-0"
-        />
+        <div
+          class="w-16 h-16 rounded-3xl font-extrabold text-2xl flex items-center justify-center border-2 border-emerald-500/30 shadow-md shrink-0 select-none"
+          :class="getAvatarColor(user.name)"
+        >
+          {{ getInitials(user.name) }}
+        </div>
         <div>
           <div class="flex items-center gap-2.5">
             <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">

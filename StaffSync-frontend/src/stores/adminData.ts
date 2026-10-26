@@ -25,12 +25,14 @@ export interface AdminUser {
   jobTitle: string
   enabled: boolean
   department?: any
+  role: 'ROLE_ADMIN' | 'ROLE_EMPLOYEE' | string
+  systemRole?: 'ROLE_ADMIN' | 'ROLE_EMPLOYEE' | string
+  roles?: string[]
   // UI helpers
   name: string
-  role: string
   departmentId: string | number
   status: 'Active' | 'On Shift' | 'On Leave' | 'Remote'
-  avatarUrl: string
+  avatarUrl?: string
   phone: string
   joinDate: string
 }
@@ -68,24 +70,37 @@ const colorPalette: Department['color'][] = [
   'sky',
 ]
 
-const presetAvatars = [
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+export function getInitials(name?: string): string {
+  if (!name) return '?'
+  const clean = name.trim()
+  if (!clean) return '?'
+  const parts = clean.split(/\s+/).filter(Boolean)
+  if (parts.length >= 2) {
+    const first = parts[0]?.[0] || ''
+    const last = parts[parts.length - 1]?.[0] || ''
+    return (first + last).toUpperCase()
+  }
+  return clean.slice(0, 2).toUpperCase()
+}
+
+const avatarColorStyles = [
+  'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-500/20',
+  'bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300 border-indigo-500/20',
+  'bg-violet-500/10 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300 border-violet-500/20',
+  'bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-300 border-teal-500/20',
+  'bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 border-amber-500/20',
+  'bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300 border-rose-500/20',
+  'bg-sky-500/10 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border-sky-500/20',
 ]
 
-function getStableAvatar(key: string | number): string {
+export function getAvatarColor(key?: string | number): string {
+  if (!key) return avatarColorStyles[0]!
   const s = String(key)
   let sum = 0
   for (let i = 0; i < s.length; i++) {
     sum += s.charCodeAt(i)
   }
-  return presetAvatars[sum % presetAvatars.length] || presetAvatars[0]!
+  return avatarColorStyles[sum % avatarColorStyles.length] || avatarColorStyles[0]!
 }
 
 function normalizeStatus(raw: any): 'Todo' | 'In Progress' | 'Completed' {
@@ -188,19 +203,38 @@ export const useAdminDataStore = defineStore('adminData', () => {
       typeof u.department === 'object' && u.department != null
         ? u.department.id
         : u.department || ''
+
+    let role = 'ROLE_EMPLOYEE'
+    if (u.role === 'ROLE_ADMIN' || u.role === 'ADMIN') {
+      role = 'ROLE_ADMIN'
+    } else if (Array.isArray(u.roles) && u.roles.some((r: any) => (typeof r === 'string' ? r : r.name || r.role || r.authority) === 'ROLE_ADMIN')) {
+      role = 'ROLE_ADMIN'
+    } else if (Array.isArray(u.authorities) && u.authorities.some((a: any) => (typeof a === 'string' ? a : a.authority || a.role) === 'ROLE_ADMIN')) {
+      role = 'ROLE_ADMIN'
+    } else if (u.role === 'ROLE_EMPLOYEE' || u.role === 'EMPLOYEE') {
+      role = 'ROLE_EMPLOYEE'
+    }
+
+    const jobTitle =
+      u.jobTitle ||
+      (u.role && u.role !== 'ROLE_ADMIN' && u.role !== 'ADMIN' && u.role !== 'ROLE_EMPLOYEE' && u.role !== 'EMPLOYEE'
+        ? u.role
+        : 'Team Member')
+
     return {
       id: u.id,
       username: u.username || '',
       fullName: u.fullName || u.name || u.username || 'User',
       email: u.email || '',
-      jobTitle: u.jobTitle || u.role || 'Staff Member',
+      jobTitle: jobTitle,
       enabled: u.enabled !== false,
       department: u.department,
       name: u.fullName || u.name || u.username || 'User',
-      role: u.jobTitle || u.role || 'Staff Member',
+      role: role,
+      systemRole: role,
       departmentId: deptId,
       status: u.enabled !== false ? 'Active' : 'On Leave',
-      avatarUrl: u.avatarUrl || getStableAvatar(u.id || u.username),
+      avatarUrl: '',
       phone: u.phone || '+1 (555) 019-2831',
       joinDate: u.joinDate || '2026-01-15',
     }
@@ -296,6 +330,7 @@ export const useAdminDataStore = defineStore('adminData', () => {
     jobTitle: string
     enabled: boolean
     department?: any
+    role?: string
   }) {
     const deptId =
       typeof data.department === 'object' && data.department != null
@@ -309,6 +344,7 @@ export const useAdminDataStore = defineStore('adminData', () => {
       jobTitle: data.jobTitle.trim(),
       enabled: data.enabled !== false,
       department: deptId ? { id: Number(deptId) || deptId } : null,
+      role: data.role || 'ROLE_EMPLOYEE',
     }
 
     const res = await apiClient.post('/users', payload)
@@ -328,6 +364,7 @@ export const useAdminDataStore = defineStore('adminData', () => {
       jobTitle: string
       enabled: boolean
       department?: any
+      role?: string
     },
   ) {
     const deptId =
@@ -342,6 +379,9 @@ export const useAdminDataStore = defineStore('adminData', () => {
       enabled: data.enabled !== false,
       department: deptId ? { id: Number(deptId) || deptId } : null,
     }
+    if (data.role) {
+      payload.role = data.role
+    }
     if (data.password && data.password.trim()) {
       payload.password = data.password.trim()
     }
@@ -352,7 +392,7 @@ export const useAdminDataStore = defineStore('adminData', () => {
     if (index !== -1) {
       users.value[index] = { ...users.value[index], ...updated }
     }
-    addLog(`Updated profile for ${updated.name}`, `Title: ${updated.role}`, 'user')
+    addLog(`Updated profile for ${updated.name}`, `Role: ${updated.role}`, 'user')
     return updated
   }
 

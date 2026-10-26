@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import {
   useAdminDataStore,
+  getInitials,
+  getAvatarColor,
   type Department,
   type AdminUser,
   type AdminTask,
@@ -15,7 +17,6 @@ import DepartmentUsersSection from './admin/DepartmentUsersSection.vue'
 import UserTasksSection from './admin/UserTasksSection.vue'
 import GlobalUsersSection from './admin/GlobalUsersSection.vue'
 import GlobalTasksSection from './admin/GlobalTasksSection.vue'
-import AuditLogSection from './admin/AuditLogSection.vue'
 import DepartmentModal from './admin/DepartmentModal.vue'
 import UserModal from './admin/UserModal.vue'
 import TaskModal from './admin/TaskModal.vue'
@@ -30,7 +31,7 @@ onMounted(async () => {
 })
 
 // Navigation & View States
-type ViewTab = 'hierarchy' | 'all-users' | 'all-tasks' | 'audit-log'
+type ViewTab = 'hierarchy' | 'all-users' | 'all-tasks'
 const activeTab = ref<ViewTab>('hierarchy')
 
 type HierarchyLevel = 'departments' | 'users' | 'tasks'
@@ -183,6 +184,7 @@ async function handleSaveUser(data: {
   jobTitle: string
   enabled: boolean
   department?: any
+  role?: string
 }) {
   try {
     if (userToEdit.value) {
@@ -477,26 +479,6 @@ function handleLogout() {
             </svg>
             Global Tasks ({{ adminStore.totalTasks }})
           </button>
-
-          <button
-            type="button"
-            class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
-            :class="
-              activeTab === 'audit-log'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-            "
-            @click="activeTab = 'audit-log'"
-          >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
-              <polyline points="10 9 9 9 8 9" />
-            </svg>
-            Audit Log ({{ adminStore.activityLogs.length }})
-          </button>
         </div>
 
         <div class="text-xs font-mono text-slate-400 hidden lg:block px-2">
@@ -556,7 +538,12 @@ function handleLogout() {
           <template v-if="activeUser && currentLevel === 'tasks'">
             <span class="text-slate-400">&rsaquo;</span>
             <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold">
-              <img :src="activeUser.avatarUrl" alt="" class="w-4 h-4 rounded-full object-cover" />
+              <span
+                class="w-4 h-4 rounded-full font-bold text-[9px] flex items-center justify-center border select-none shrink-0"
+                :class="getAvatarColor(activeUser.name)"
+              >
+                {{ getInitials(activeUser.name) }}
+              </span>
               <span>{{ activeUser.name }}</span>
               <span class="text-[10px] px-1.5 py-0.2 bg-amber-500/20 text-amber-700 dark:text-amber-400 rounded-full font-mono">
                 {{ adminStore.getTasksByUser(activeUser.id).length }} tasks
@@ -633,9 +620,6 @@ function handleLogout() {
         @delete-task="promptDeleteTask"
         @status-change="handleTaskStatusChange"
       />
-
-      <!-- TAB 4: AUDIT TRAIL LOG -->
-      <AuditLogSection v-else-if="activeTab === 'audit-log'" />
     </div>
 
     <!-- Modals -->

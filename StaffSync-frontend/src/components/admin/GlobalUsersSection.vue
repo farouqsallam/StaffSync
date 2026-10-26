@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAdminDataStore, type AdminUser } from '@/stores/adminData'
+import {
+  useAdminDataStore,
+  getInitials,
+  getAvatarColor,
+  type AdminUser,
+} from '@/stores/adminData'
 
 const emit = defineEmits<{
   (e: 'addUser'): void
@@ -29,6 +34,7 @@ const filteredUsers = computed(() => {
         u.name.toLowerCase().includes(q) ||
         u.email.toLowerCase().includes(q) ||
         u.role.toLowerCase().includes(q) ||
+        (u.jobTitle && u.jobTitle.toLowerCase().includes(q)) ||
         u.username.toLowerCase().includes(q),
     )
   }
@@ -99,7 +105,12 @@ const filteredUsers = computed(() => {
             >
               <td class="py-4 px-6">
                 <div class="flex items-center gap-3">
-                  <img :src="user.avatarUrl" alt="" class="w-10 h-10 rounded-xl object-cover" />
+                  <div
+                    class="w-10 h-10 rounded-xl font-bold text-sm flex items-center justify-center border shrink-0 select-none"
+                    :class="getAvatarColor(user.name)"
+                  >
+                    {{ getInitials(user.name) }}
+                  </div>
                   <div>
                     <div class="font-bold text-slate-900 dark:text-white">{{ user.name }}</div>
                     <div class="text-xs text-slate-400">{{ user.email }} &bull; @{{ user.username }}</div>
@@ -118,9 +129,23 @@ const filteredUsers = computed(() => {
                 <span v-else class="text-xs text-slate-400 italic">Unassigned</span>
               </td>
               <td class="py-4 px-4">
-                <div class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ user.role }}</div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ user.jobTitle }}</span>
+                  <span
+                    v-if="user.role === 'ROLE_ADMIN'"
+                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                  >
+                    ADMIN
+                  </span>
+                  <span
+                    v-else
+                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800"
+                  >
+                    EMPLOYEE
+                  </span>
+                </div>
                 <span
-                  class="inline-block mt-0.5 px-2 py-0.2 rounded-full text-[10px] font-semibold"
+                  class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
                   :class="user.enabled ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-slate-500/10 text-slate-500'"
                 >
                   {{ user.enabled ? 'Active' : 'Disabled' }}

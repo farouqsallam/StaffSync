@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAdminDataStore, type Department, type AdminUser } from '@/stores/adminData'
+import {
+  useAdminDataStore,
+  getInitials,
+  getAvatarColor,
+  type Department,
+  type AdminUser,
+} from '@/stores/adminData'
 
 const props = defineProps<{
   department: Department
@@ -189,11 +195,12 @@ const departmentUsers = computed(() => {
           <!-- Header: Avatar, Name, Status, Actions -->
           <div class="flex items-start justify-between gap-3 mb-4">
             <div class="flex items-center gap-3">
-              <img
-                :src="user.avatarUrl"
-                :alt="user.name"
-                class="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shadow-xs"
-              />
+              <div
+                class="w-12 h-12 rounded-2xl font-bold text-base flex items-center justify-center border shadow-xs shrink-0 select-none"
+                :class="getAvatarColor(user.name)"
+              >
+                {{ getInitials(user.name) }}
+              </div>
               <div>
                 <h4 class="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
                   {{ user.name }}
@@ -232,7 +239,15 @@ const departmentUsers = computed(() => {
 
           <!-- Role & Status -->
           <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
-            <span class="font-semibold text-slate-700 dark:text-slate-300">{{ user.role }}</span>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-semibold text-slate-700 dark:text-slate-300">{{ user.jobTitle }}</span>
+              <span
+                v-if="user.role === 'ROLE_ADMIN'"
+                class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+              >
+                ADMIN
+              </span>
+            </div>
             <span
               class="px-2 py-0.5 rounded-full font-semibold text-[11px]"
               :class="user.enabled ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-slate-500/10 text-slate-500 border border-slate-500/20'"
@@ -297,7 +312,12 @@ const departmentUsers = computed(() => {
             >
               <td class="py-4 px-6">
                 <div class="flex items-center gap-3">
-                  <img :src="user.avatarUrl" alt="" class="w-9 h-9 rounded-xl object-cover" />
+                  <div
+                    class="w-9 h-9 rounded-xl font-bold text-xs flex items-center justify-center border shrink-0 select-none"
+                    :class="getAvatarColor(user.name)"
+                  >
+                    {{ getInitials(user.name) }}
+                  </div>
                   <div>
                     <div class="font-bold text-slate-900 dark:text-white">{{ user.name }}</div>
                     <div class="text-xs text-slate-400">{{ user.email }} &bull; @{{ user.username }}</div>
@@ -305,7 +325,15 @@ const departmentUsers = computed(() => {
                 </div>
               </td>
               <td class="py-4 px-4 font-semibold text-slate-800 dark:text-slate-200">
-                {{ user.role }}
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span>{{ user.jobTitle }}</span>
+                  <span
+                    v-if="user.role === 'ROLE_ADMIN'"
+                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                  >
+                    ADMIN
+                  </span>
+                </div>
               </td>
               <td class="py-4 px-4">
                 <span
