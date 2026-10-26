@@ -308,7 +308,7 @@ function handleLogout() {
 </script>
 
 <template>
-  <div class="flex-1 min-h-[calc(100vh-4.5rem)] bg-slate-50/70 dark:bg-slate-950 p-4 sm:p-6 lg:p-8">
+  <div class="flex-1 min-h-[calc(100vh-4.5rem)] bg-slate-50/70 dark:bg-slate-950 p-3.5 sm:p-6 lg:p-8">
     <!-- Floating Notification Toast -->
     <transition
       enter-active-class="transform ease-out duration-300 transition"
@@ -320,18 +320,20 @@ function handleLogout() {
     >
       <div
         v-if="toastMessage"
-        class="fixed bottom-6 right-6 z-50 flex items-center gap-3 py-3 px-5 rounded-2xl shadow-2xl border text-sm font-medium backdrop-blur-md"
+        class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 left-4 sm:left-auto max-w-md z-50 flex items-center justify-between sm:justify-start gap-3 py-3 px-4 sm:px-5 rounded-2xl shadow-2xl border text-xs sm:text-sm font-medium backdrop-blur-md"
         :class="{
           'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-700/50': toastType === 'success',
           'bg-rose-900 text-white dark:bg-rose-100 dark:text-rose-900 border-rose-700': toastType === 'danger',
           'bg-indigo-900 text-white dark:bg-indigo-100 dark:text-indigo-900 border-indigo-700': toastType === 'info',
         }"
       >
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>{{ toastMessage }}</span>
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+          <span class="truncate">{{ toastMessage }}</span>
+        </div>
         <button
           type="button"
-          class="ml-2 text-slate-400 hover:text-white dark:hover:text-slate-900 text-lg leading-none"
+          class="ml-2 text-slate-400 hover:text-white dark:hover:text-slate-900 text-lg leading-none shrink-0"
           @click="toastMessage = null"
         >
           &times;
@@ -339,12 +341,12 @@ function handleLogout() {
       </div>
     </transition>
 
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-5 sm:space-y-6">
       <!-- Top Administrative Action Header -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 dark:border-slate-800">
-        <div>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/20">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-slate-200/80 dark:border-slate-800">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <rect x="3" y="3" width="7" height="7" rx="1.5" />
                 <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -352,11 +354,11 @@ function handleLogout() {
                 <rect x="3" y="14" width="7" height="7" rx="1.5" />
               </svg>
             </div>
-            <div>
-              <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <div class="min-w-0">
+              <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white truncate">
                 Admin Management Hub
               </h1>
-              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                 Organizational Hierarchy &bull;
                 <strong class="text-slate-800 dark:text-slate-200">Departments</strong> &rarr;
                 <strong class="text-slate-800 dark:text-slate-200">Personnel</strong> &rarr;
@@ -367,51 +369,51 @@ function handleLogout() {
         </div>
 
         <!-- Top Right Actions -->
-        <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex items-center gap-2 sm:gap-2.5 w-full sm:w-auto shrink-0 justify-end">
           <!-- Primary Context-Aware Add Button -->
           <button
             v-if="currentLevel === 'departments' && activeTab === 'hierarchy'"
             type="button"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-indigo-600/20 transition active:scale-95"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-indigo-600/20 transition active:scale-95"
             @click="openAddDepartmentModal"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Add Department
+            <span>Add Department</span>
           </button>
 
           <button
             v-else-if="currentLevel === 'users' && activeTab === 'hierarchy'"
             type="button"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-emerald-600/20 transition active:scale-95"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-emerald-600/20 transition active:scale-95"
             @click="openAddUserModal(selectedDepartmentId || undefined)"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Add Team Member
+            <span>Add Team Member</span>
           </button>
 
           <button
             v-else-if="currentLevel === 'tasks' && activeTab === 'hierarchy'"
             type="button"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-amber-600/20 transition active:scale-95"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-amber-600/20 transition active:scale-95"
             @click="openAddTaskModal(selectedUserId || undefined, selectedDepartmentId || undefined)"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Assign New Task
+            <span>Assign New Task</span>
           </button>
 
           <!-- Logout Button -->
           <button
             type="button"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-xs sm:text-sm font-semibold transition"
+            class="shrink-0 inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-xs sm:text-sm font-semibold transition"
             @click="handleLogout"
           >
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -419,17 +421,17 @@ function handleLogout() {
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-            Logout
+            <span class="hidden xs:inline">Logout</span>
           </button>
         </div>
       </div>
 
       <!-- Navigation Tabs Bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-        <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-1.5 sm:p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-thin w-full sm:w-auto">
           <button
             type="button"
-            class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
+            class="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
             :class="
               activeTab === 'hierarchy'
                 ? 'bg-emerald-600 text-white shadow-xs'
@@ -437,16 +439,17 @@ function handleLogout() {
             "
             @click="activeTab = 'hierarchy'"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
-            Hierarchy Navigator
+            <span class="hidden sm:inline">Hierarchy Navigator</span>
+            <span class="sm:hidden">Hierarchy</span>
           </button>
 
           <button
             type="button"
-            class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
+            class="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
             :class="
               activeTab === 'all-users'
                 ? 'bg-emerald-600 text-white shadow-xs'
@@ -454,18 +457,19 @@ function handleLogout() {
             "
             @click="activeTab = 'all-users'"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
-            Personnel Directory ({{ adminStore.totalUsers }})
+            <span class="hidden sm:inline">Personnel Directory ({{ adminStore.totalUsers }})</span>
+            <span class="sm:hidden">Personnel ({{ adminStore.totalUsers }})</span>
           </button>
 
           <button
             type="button"
-            class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
+            class="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shrink-0"
             :class="
               activeTab === 'all-tasks'
                 ? 'bg-emerald-600 text-white shadow-xs'
@@ -473,15 +477,16 @@ function handleLogout() {
             "
             @click="activeTab = 'all-tasks'"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 11 12 14 22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
-            Global Tasks ({{ adminStore.totalTasks }})
+            <span class="hidden sm:inline">Global Tasks ({{ adminStore.totalTasks }})</span>
+            <span class="sm:hidden">Tasks ({{ adminStore.totalTasks }})</span>
           </button>
         </div>
 
-        <div class="text-xs font-mono text-slate-400 hidden lg:block px-2">
+        <div class="text-xs font-mono text-slate-400 hidden lg:block px-2 shrink-0">
           ROLE_ADMIN &bull; API Connected
         </div>
       </div>
@@ -492,13 +497,13 @@ function handleLogout() {
       <!-- Breadcrumbs Trail (Hierarchy Navigation) -->
       <div
         v-if="activeTab === 'hierarchy'"
-        class="flex items-center justify-between flex-wrap gap-3 bg-white dark:bg-slate-900 px-4 py-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs"
+        class="flex items-center justify-between gap-2.5 sm:gap-4 bg-white dark:bg-slate-900 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs"
       >
-        <div class="flex items-center gap-2 text-xs sm:text-sm font-medium overflow-x-auto py-1">
+        <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium overflow-x-auto py-1 scrollbar-thin min-w-0 flex-1">
           <!-- Level 1: All Departments -->
           <button
             type="button"
-            class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition"
+            class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition shrink-0"
             :class="
               currentLevel === 'departments'
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
@@ -515,10 +520,10 @@ function handleLogout() {
 
           <!-- Level 2: Department -->
           <template v-if="activeDepartment && (currentLevel === 'users' || currentLevel === 'tasks')">
-            <span class="text-slate-400">&rsaquo;</span>
+            <span class="text-slate-400 shrink-0">&rsaquo;</span>
             <button
               type="button"
-              class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition"
+              class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition shrink-0"
               :class="
                 currentLevel === 'users'
                   ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
@@ -527,41 +532,42 @@ function handleLogout() {
               @click="drillDownToDepartment(activeDepartment.id)"
             >
               <span>📂</span>
-              <span>{{ activeDepartment.name }}</span>
+              <span class="max-w-[120px] xs:max-w-[200px] sm:max-w-none truncate">{{ activeDepartment.name }}</span>
               <span class="text-[10px] px-1.5 py-0.2 bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 rounded-full font-mono">
-                {{ adminStore.getUsersByDepartment(activeDepartment.id).length }} members
+                {{ adminStore.getUsersByDepartment(activeDepartment.id).length }}
               </span>
             </button>
           </template>
 
           <!-- Level 3: User -->
           <template v-if="activeUser && currentLevel === 'tasks'">
-            <span class="text-slate-400">&rsaquo;</span>
-            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold">
+            <span class="text-slate-400 shrink-0">&rsaquo;</span>
+            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold shrink-0">
               <span
                 class="w-4 h-4 rounded-full font-bold text-[9px] flex items-center justify-center border select-none shrink-0"
                 :class="getAvatarColor(activeUser.name)"
               >
                 {{ getInitials(activeUser.name) }}
               </span>
-              <span>{{ activeUser.name }}</span>
+              <span class="max-w-[100px] xs:max-w-[160px] sm:max-w-none truncate">{{ activeUser.name }}</span>
               <span class="text-[10px] px-1.5 py-0.2 bg-amber-500/20 text-amber-700 dark:text-amber-400 rounded-full font-mono">
-                {{ adminStore.getTasksByUser(activeUser.id).length }} tasks
+                {{ adminStore.getTasksByUser(activeUser.id).length }}
               </span>
             </div>
           </template>
         </div>
 
-        <div v-if="currentLevel !== 'departments'" class="flex items-center gap-2">
+        <div v-if="currentLevel !== 'departments'" class="shrink-0 flex items-center">
           <button
             type="button"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95 shrink-0"
             @click="goBackOneLevel"
           >
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            {{ currentLevel === 'tasks' ? `Back to ${activeDepartment?.code || 'Department'}` : 'Back to Departments' }}
+            <span class="hidden xs:inline">{{ currentLevel === 'tasks' ? `Back to ${activeDepartment?.code || 'Department'}` : 'Back to Departments' }}</span>
+            <span class="xs:hidden">Back</span>
           </button>
         </div>
       </div>

@@ -64,8 +64,8 @@ function getDepartmentColorClass(color: Department['color']) {
 <template>
   <div class="space-y-4 animate-fade-in">
     <!-- Toolbar: Search, View Mode Toggle, Add Department Button -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-      <div class="relative flex-1">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+      <div class="relative flex-1 w-full">
         <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -78,7 +78,7 @@ function getDepartmentColorClass(color: Department['color']) {
         />
       </div>
 
-      <div class="flex items-center gap-2 shrink-0">
+      <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto shrink-0">
         <!-- View Mode Toggle -->
         <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
           <button
@@ -131,9 +131,9 @@ function getDepartmentColorClass(color: Department['color']) {
     <!-- Empty State -->
     <div
       v-if="filteredDepartments.length === 0"
-      class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-12 text-center shadow-xs"
+      class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8 sm:p-12 text-center shadow-xs flex flex-col items-center justify-center"
     >
-      <div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-3">
+      <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-3 shrink-0">
         <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
           <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
@@ -154,17 +154,17 @@ function getDepartmentColorClass(color: Department['color']) {
     </div>
 
     <!-- Grid View -->
-    <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
       <div
         v-for="dept in filteredDepartments"
         :key="dept.id"
-        class="group relative bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer hover:-translate-y-1"
+        class="group relative bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-5 sm:p-6 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer hover:-translate-y-1"
         @click="emit('drillDown', dept.id)"
       >
         <div>
           <!-- Header -->
           <div class="flex items-start justify-between gap-3 mb-3">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2 sm:gap-2.5">
               <span
                 class="px-2.5 py-1 rounded-xl text-xs font-mono font-bold uppercase tracking-wider"
                 :class="getDepartmentColorClass(dept.color).badge"
@@ -201,7 +201,7 @@ function getDepartmentColorClass(color: Department['color']) {
             </div>
           </div>
 
-          <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition leading-snug">
             {{ dept.name }}
           </h3>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
@@ -210,8 +210,8 @@ function getDepartmentColorClass(color: Department['color']) {
         </div>
 
         <!-- Footer -->
-        <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <div class="flex items-center gap-3 text-xs">
+        <div class="mt-4 sm:mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2.5 sm:gap-3 text-xs">
             <span class="inline-flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
               <svg class="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -228,7 +228,7 @@ function getDepartmentColorClass(color: Department['color']) {
             </span>
           </div>
 
-          <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-1 transition">
+          <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-1 transition shrink-0">
             View Team &rarr;
           </span>
         </div>
@@ -236,52 +236,52 @@ function getDepartmentColorClass(color: Department['color']) {
     </div>
 
     <!-- Table View -->
-    <div v-else class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+    <div v-else class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+      <div class="overflow-x-auto scrollbar-thin">
+        <table class="w-full text-left border-collapse min-w-[580px]">
           <thead>
-            <tr class="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th class="py-4 px-6">Department Name</th>
-              <th class="py-4 px-4">Code Tag</th>
-              <th class="py-4 px-4">Personnel</th>
-              <th class="py-4 px-4">Active Tasks</th>
-              <th class="py-4 px-6 text-right">Actions</th>
+            <tr class="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <th class="py-3 px-4 sm:py-4 sm:px-6">Department Name</th>
+              <th class="py-3 px-3 sm:py-4 sm:px-4">Code</th>
+              <th class="py-3 px-3 sm:py-4 sm:px-4">Personnel</th>
+              <th class="py-3 px-3 sm:py-4 sm:px-4">Active Tasks</th>
+              <th class="py-3 px-4 sm:py-4 sm:px-6 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs sm:text-sm">
             <tr
               v-for="dept in filteredDepartments"
               :key="dept.id"
               class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition cursor-pointer"
               @click="emit('drillDown', dept.id)"
             >
-              <td class="py-4 px-6">
+              <td class="py-3.5 px-4 sm:py-4 sm:px-6">
                 <div class="font-bold text-slate-900 dark:text-white">{{ dept.name }}</div>
-                <div class="text-xs text-slate-400">ID: {{ dept.id }}</div>
+                <div class="text-[11px] text-slate-400">ID: {{ dept.id }}</div>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <span class="px-2 py-0.5 rounded-lg text-xs font-mono font-bold" :class="getDepartmentColorClass(dept.color).badge">
                   {{ dept.code }}
                 </span>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400">
-                  {{ adminStore.getUsersByDepartment(dept.id).length }} team members
+                  {{ adminStore.getUsersByDepartment(dept.id).length }} members
                 </span>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400">
                   {{ adminStore.getTasksByDepartment(dept.id).length }} tasks
                 </span>
               </td>
-              <td class="py-4 px-6 text-right" @click.stop>
-                <div class="flex items-center justify-end gap-2">
+              <td class="py-3.5 px-4 sm:py-4 sm:px-6 text-right" @click.stop>
+                <div class="flex items-center justify-end gap-1.5 sm:gap-2">
                   <button
                     type="button"
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 transition"
+                    class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 transition"
                     @click="emit('drillDown', dept.id)"
                   >
-                    View Team
+                    View
                   </button>
                   <button
                     type="button"

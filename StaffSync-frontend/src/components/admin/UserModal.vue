@@ -122,17 +122,17 @@ function handleSubmit() {
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
+    class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
     @click.self="emit('close')"
   >
     <div
-      class="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+      class="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh] scrollbar-thin"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-        <div class="flex items-center gap-3">
+      <div class="flex items-start xs:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3 min-w-0">
           <div
-            class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -141,18 +141,18 @@ function handleSubmit() {
               <line x1="23" y1="11" x2="17" y2="11" />
             </svg>
           </div>
-          <div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+          <div class="min-w-0">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white truncate">
               {{ userToEdit ? 'Edit Personnel' : 'Add New Team Member' }}
             </h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
               {{ userToEdit ? 'Update account credentials & assignment' : 'Register a new member to the roster' }}
             </p>
           </div>
         </div>
         <button
           type="button"
-          class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0"
           @click="emit('close')"
         >
           &times;
@@ -259,7 +259,7 @@ function handleSubmit() {
           v-if="authStore.isAdmin"
           class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-3"
         >
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col xs:flex-row xs:items-center justify-between gap-2.5">
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-bold text-slate-900 dark:text-white">Role & Permissions</span>
@@ -271,7 +271,7 @@ function handleSubmit() {
             </div>
 
             <!-- Segmented Quick Toggle -->
-            <div class="inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-slate-900/80 border border-slate-300/60 dark:border-slate-700">
+            <div class="inline-flex self-start xs:self-auto p-1 rounded-xl bg-slate-200/70 dark:bg-slate-900/80 border border-slate-300/60 dark:border-slate-700 shrink-0">
               <button
                 type="button"
                 @click="form.role = 'ROLE_EMPLOYEE'"
@@ -351,12 +351,12 @@ function handleSubmit() {
         </div>
 
         <!-- Enabled / Active Status Toggle -->
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col xs:flex-row xs:items-center justify-between gap-2.5">
           <div>
             <div class="text-xs font-bold text-slate-900 dark:text-white">Account Status</div>
             <div class="text-[11px] text-slate-400">Enable or disable access to StaffSync applications</div>
           </div>
-          <label class="relative inline-flex items-center cursor-pointer">
+          <label class="relative inline-flex items-center cursor-pointer shrink-0 self-start xs:self-auto">
             <input
               type="checkbox"
               v-model="form.enabled"
@@ -370,17 +370,17 @@ function handleSubmit() {
         </div>
 
         <!-- Action Buttons -->
-        <div class="pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+        <div class="pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse xs:flex-row items-stretch xs:items-center justify-end gap-2.5 sm:gap-3">
           <button
             type="button"
-            class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            class="w-full xs:w-auto text-center justify-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             @click="emit('close')"
           >
             Cancel
           </button>
           <button
             type="submit"
-            class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold text-white shadow-md shadow-emerald-600/25 transition active:scale-95"
+            class="w-full xs:w-auto text-center justify-center px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold text-white shadow-md shadow-emerald-600/25 transition active:scale-95"
           >
             {{ userToEdit ? 'Save Changes' : 'Register Member' }}
           </button>

@@ -70,8 +70,8 @@ function getAssigneeName(task: AdminTask): string {
 <template>
   <div class="space-y-4 animate-fade-in">
     <!-- Toolbar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-      <div class="relative flex-1">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+      <div class="relative flex-1 w-full">
         <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -84,10 +84,10 @@ function getAssigneeName(task: AdminTask): string {
         />
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto shrink-0">
         <select
           v-model="deptFilter"
-          class="px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-amber-500"
+          class="flex-1 sm:flex-initial px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-amber-500"
         >
           <option value="All">All Departments</option>
           <option v-for="dept in adminStore.departments" :key="dept.id" :value="dept.id">
@@ -97,43 +97,43 @@ function getAssigneeName(task: AdminTask): string {
 
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95"
+          class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95 shrink-0"
           @click="emit('addTask')"
         >
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          New Task
+          <span>New Task</span>
         </button>
       </div>
     </div>
 
     <!-- Tasks Table -->
-    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+      <div class="overflow-x-auto scrollbar-thin">
+        <table class="w-full text-left border-collapse min-w-[680px]">
           <thead>
-            <tr class="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th class="py-4 px-6">Task Objective</th>
-              <th class="py-4 px-4">Assignee</th>
-              <th class="py-4 px-4">Priority</th>
-              <th class="py-4 px-4">Status</th>
-              <th class="py-4 px-4">Target Due</th>
-              <th class="py-4 px-6 text-right">Actions</th>
+            <tr class="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <th class="py-3.5 px-4 sm:py-4 sm:px-6">Task Objective</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Assignee</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Priority</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Status</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Target Due</th>
+              <th class="py-3.5 px-4 sm:py-4 sm:px-6 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs sm:text-sm">
             <tr
               v-for="task in filteredTasks"
               :key="task.id"
               class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition"
             >
-              <td class="py-4 px-6">
-                <div class="font-bold text-slate-900 dark:text-white leading-snug">{{ task.title }}</div>
-                <div class="text-xs text-slate-400 line-clamp-1 mt-0.5">{{ task.description || 'No description' }}</div>
+              <td class="py-3.5 px-4 sm:py-4 sm:px-6">
+                <div class="font-bold text-slate-900 dark:text-white leading-snug truncate max-w-[220px] sm:max-w-none">{{ task.title }}</div>
+                <div class="text-[11px] text-slate-400 line-clamp-1 mt-0.5">{{ task.description || 'No description' }}</div>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <div class="flex items-center gap-2">
                   <div
                     class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border select-none shrink-0"
@@ -141,17 +141,17 @@ function getAssigneeName(task: AdminTask): string {
                   >
                     {{ getInitials(getAssigneeName(task)) }}
                   </div>
-                  <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                  <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[120px]">
                     {{ getAssigneeName(task) }}
                   </span>
                 </div>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <span class="px-2 py-0.5 rounded text-xs font-bold" :class="getPriorityBadgeClass(task.priority)">
                   {{ task.priority }}
                 </span>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <select
                   :value="task.status"
                   class="px-2 py-0.5 rounded-lg text-xs font-semibold outline-none cursor-pointer"
@@ -163,11 +163,11 @@ function getAssigneeName(task: AdminTask): string {
                   <option value="Completed">Completed</option>
                 </select>
               </td>
-              <td class="py-4 px-4 text-xs font-mono text-slate-500">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4 text-xs font-mono text-slate-500">
                 {{ task.dueDate || 'N/A' }}
               </td>
-              <td class="py-4 px-6 text-right">
-                <div class="flex items-center justify-end gap-2">
+              <td class="py-3.5 px-4 sm:py-4 sm:px-6 text-right">
+                <div class="flex items-center justify-end gap-1.5 sm:gap-2">
                   <button
                     type="button"
                     class="p-1.5 text-slate-400 hover:text-amber-500"
@@ -195,8 +195,18 @@ function getAssigneeName(task: AdminTask): string {
             </tr>
 
             <tr v-if="filteredTasks.length === 0">
-              <td colspan="6" class="py-12 text-center text-slate-400 text-sm">
-                No tasks found matching your filter criteria.
+              <td colspan="6" class="py-12 px-4 text-center">
+                <div class="flex flex-col items-center justify-center text-center">
+                  <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3 shrink-0">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">No Tasks Found</h4>
+                  <p class="text-xs text-slate-400 mt-1 max-w-sm">No tasks found matching your filter criteria.</p>
+                </div>
               </td>
             </tr>
           </tbody>

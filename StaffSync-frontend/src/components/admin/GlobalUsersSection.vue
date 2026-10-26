@@ -45,8 +45,8 @@ const filteredUsers = computed(() => {
 <template>
   <div class="space-y-4 animate-fade-in">
     <!-- Toolbar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-      <div class="relative flex-1">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+      <div class="relative flex-1 w-full">
         <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -59,10 +59,10 @@ const filteredUsers = computed(() => {
         />
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto shrink-0">
         <select
           v-model="deptFilter"
-          class="px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-emerald-500"
+          class="flex-1 sm:flex-initial px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-emerald-500"
         >
           <option value="All">All Departments</option>
           <option v-for="dept in adminStore.departments" :key="dept.id" :value="dept.id">
@@ -72,95 +72,95 @@ const filteredUsers = computed(() => {
 
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95"
+          class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95 shrink-0"
           @click="emit('addUser')"
         >
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          Add Member
+          <span>Add Member</span>
         </button>
       </div>
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+      <div class="overflow-x-auto scrollbar-thin">
+        <table class="w-full text-left border-collapse min-w-[660px]">
           <thead>
-            <tr class="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <th class="py-4 px-6">Personnel</th>
-              <th class="py-4 px-4">Department</th>
-              <th class="py-4 px-4">Role & Status</th>
-              <th class="py-4 px-4">Active Tasks</th>
-              <th class="py-4 px-6 text-right">Quick Navigation</th>
+            <tr class="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <th class="py-3.5 px-4 sm:py-4 sm:px-6">Personnel</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Department</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Role & Status</th>
+              <th class="py-3.5 px-3 sm:py-4 sm:px-4">Active Tasks</th>
+              <th class="py-3.5 px-4 sm:py-4 sm:px-6 text-right">Quick Navigation</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs sm:text-sm">
             <tr
               v-for="user in filteredUsers"
               :key="user.id"
               class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition"
             >
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-3">
+              <td class="py-3.5 px-4 sm:py-4 sm:px-6">
+                <div class="flex items-center gap-2.5 sm:gap-3">
                   <div
-                    class="w-10 h-10 rounded-xl font-bold text-sm flex items-center justify-center border shrink-0 select-none"
+                    class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center border shrink-0 select-none"
                     :class="getAvatarColor(user.name)"
                   >
                     {{ getInitials(user.name) }}
                   </div>
-                  <div>
-                    <div class="font-bold text-slate-900 dark:text-white">{{ user.name }}</div>
-                    <div class="text-xs text-slate-400">{{ user.email }} &bull; @{{ user.username }}</div>
+                  <div class="min-w-0">
+                    <div class="font-bold text-slate-900 dark:text-white truncate max-w-[150px] sm:max-w-none">{{ user.name }}</div>
+                    <div class="text-[11px] text-slate-400 truncate max-w-[150px] sm:max-w-none">{{ user.email }} &bull; @{{ user.username }}</div>
                   </div>
                 </div>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <button
                   v-if="user.departmentId"
                   type="button"
-                  class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                  class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline truncate max-w-[130px] block"
                   @click="emit('viewDepartment', user.departmentId)"
                 >
                   {{ adminStore.getDepartmentById(user.departmentId)?.name || `Dept #${user.departmentId}` }}
                 </button>
                 <span v-else class="text-xs text-slate-400 italic">Unassigned</span>
               </td>
-              <td class="py-4 px-4">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ user.jobTitle }}</span>
+                  <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[130px] sm:max-w-none">{{ user.jobTitle }}</span>
                   <span
                     v-if="user.role === 'ROLE_ADMIN'"
-                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shrink-0"
                   >
                     ADMIN
                   </span>
                   <span
                     v-else
-                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800"
+                    class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 shrink-0"
                   >
                     EMPLOYEE
                   </span>
                 </div>
                 <span
-                  class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                  class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0"
                   :class="user.enabled ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-slate-500/10 text-slate-500'"
                 >
                   {{ user.enabled ? 'Active' : 'Disabled' }}
                 </span>
               </td>
-              <td class="py-4 px-4">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400">
+              <td class="py-3.5 px-3 sm:py-4 sm:px-4">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 shrink-0">
                   {{ adminStore.getTasksByUser(user.id).length }} Tasks Assigned
                 </span>
               </td>
-              <td class="py-4 px-6 text-right">
-                <div class="flex items-center justify-end gap-2">
+              <td class="py-3.5 px-4 sm:py-4 sm:px-6 text-right">
+                <div class="flex items-center justify-end gap-1.5 sm:gap-2">
                   <button
                     type="button"
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 transition"
+                    class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 transition"
                     @click="emit('viewUserTasks', user)"
                   >
                     Tasks &rarr;
@@ -192,8 +192,17 @@ const filteredUsers = computed(() => {
             </tr>
 
             <tr v-if="filteredUsers.length === 0">
-              <td colspan="5" class="py-12 text-center text-slate-400 text-sm">
-                No personnel found matching your criteria.
+              <td colspan="5" class="py-12 px-4 text-center">
+                <div class="flex flex-col items-center justify-center text-center">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 shrink-0">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">No Personnel Found</h4>
+                  <p class="text-xs text-slate-400 mt-1 max-w-sm">No personnel found matching your criteria.</p>
+                </div>
               </td>
             </tr>
           </tbody>

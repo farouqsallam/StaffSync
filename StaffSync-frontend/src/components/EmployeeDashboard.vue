@@ -350,18 +350,20 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
 </script>
 
 <template>
-  <div class="flex-1 min-h-[calc(100vh-5rem)] bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 lg:p-8">
+  <div class="flex-1 min-h-[calc(100vh-5rem)] bg-slate-50 dark:bg-slate-950 p-3.5 sm:p-6 lg:p-8">
     <!-- Notification Toast -->
     <div
       v-if="notification"
-      class="fixed bottom-6 right-6 z-50 flex items-center gap-3 py-3 px-5 rounded-2xl shadow-2xl border text-sm font-medium animate-fade-in"
+      class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 left-4 sm:left-auto max-w-md z-50 flex items-center justify-between sm:justify-start gap-3 py-3 px-4 sm:px-5 rounded-2xl shadow-2xl border text-xs sm:text-sm font-medium animate-fade-in"
       :class="notificationType === 'success' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-700/50' : 'bg-rose-900 text-white border-rose-700'"
     >
-      <div class="w-2.5 h-2.5 rounded-full" :class="notificationType === 'success' ? 'bg-teal-400 animate-pulse' : 'bg-rose-400'"></div>
-      <span>{{ notification }}</span>
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-2.5 h-2.5 rounded-full shrink-0" :class="notificationType === 'success' ? 'bg-teal-400 animate-pulse' : 'bg-rose-400'"></div>
+        <span class="truncate">{{ notification }}</span>
+      </div>
       <button
         type="button"
-        class="ml-2 text-slate-400 hover:text-white dark:hover:text-slate-900 text-lg leading-none"
+        class="ml-2 text-slate-400 hover:text-white dark:hover:text-slate-900 text-lg leading-none shrink-0"
         @click="notification = null"
       >
         &times;
@@ -369,44 +371,44 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
     </div>
 
     <!-- Workspace Container -->
-    <div class="max-w-7xl mx-auto space-y-8">
+    <div class="max-w-7xl mx-auto space-y-6 sm:space-y-8">
       <!-- Top Bar: Greeting & Employee Identity -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 dark:border-slate-800">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-slate-200/80 dark:border-slate-800">
         <div>
-          <div class="flex items-center gap-3">
-            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Employee Tasks Workspace
             </h1>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-500/20 shadow-sm">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-500/20 shadow-2xs shrink-0">
               <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-              Tasks API Connected
+              API Connected
             </span>
           </div>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
             Logged in as <strong class="text-slate-800 dark:text-slate-200">{{ authStore.user?.username || 'Employee' }}</strong>
             with authority
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800">
+            <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800">
               ROLE_EMPLOYEE
             </span>
           </p>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
           <button
             type="button"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold shadow-md shadow-teal-600/20 transition active:scale-95"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-teal-600/20 transition active:scale-95"
             @click="openCreateModal"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Create Task
+            <span>Create Task</span>
           </button>
 
           <button
             type="button"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-sm font-semibold transition"
+            class="shrink-0 inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-xs sm:text-sm font-semibold transition"
             @click="handleLogout"
             title="Log out from employee session"
           >
@@ -415,29 +417,29 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-            Logout
+            <span class="hidden xs:inline">Logout</span>
           </button>
         </div>
       </div>
 
       <!-- Quick Metrics Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         <!-- Metric 1: My Total Tasks -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">My Deliverables</span>
-            <div class="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xs hover:shadow-md transition">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Deliverables</span>
+            <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 11l3 3L22 4" />
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
               </svg>
             </div>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ totalTasksCount }}</span>
-            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Total assigned</span>
+          <div class="mt-2.5 sm:mt-4 flex items-baseline gap-1.5 sm:gap-2">
+            <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{{ totalTasksCount }}</span>
+            <span class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">Total</span>
           </div>
-          <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden mt-3">
+          <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden mt-2.5 sm:mt-3">
             <div
               class="bg-teal-500 h-full rounded-full transition-all duration-500"
               :style="{ width: totalTasksCount > 0 ? `${(completedTasksCount / totalTasksCount) * 100}%` : '0%' }"
@@ -446,62 +448,62 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
         </div>
 
         <!-- Metric 2: Todo Tasks -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pending Todo</span>
-            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xs hover:shadow-md transition">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Pending</span>
+            <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 14 14" />
               </svg>
             </div>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ todoTasksCount }}</span>
-            <span class="text-xs font-semibold text-amber-600 dark:text-amber-400">Waiting action</span>
+          <div class="mt-2.5 sm:mt-4 flex items-baseline gap-1.5 sm:gap-2">
+            <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{{ todoTasksCount }}</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-amber-600 dark:text-amber-400">Todo</span>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Ready to be started</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 sm:mt-2 line-clamp-1 sm:line-clamp-none">Ready to start</p>
         </div>
 
         <!-- Metric 3: In Progress -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">In Active Progress</span>
-            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xs hover:shadow-md transition">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">In Progress</span>
+            <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v6l4 2" />
               </svg>
             </div>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ inProgressTasksCount }}</span>
-            <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Underway</span>
+          <div class="mt-2.5 sm:mt-4 flex items-baseline gap-1.5 sm:gap-2">
+            <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{{ inProgressTasksCount }}</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-blue-600 dark:text-blue-400">Underway</span>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Currently being executed</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 sm:mt-2 line-clamp-1 sm:line-clamp-none">Being executed</p>
         </div>
 
         <!-- Metric 4: Completed -->
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Completed Objectives</span>
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xs hover:shadow-md transition">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Finished</span>
+            <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ completedTasksCount }}</span>
-            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Finished</span>
+          <div class="mt-2.5 sm:mt-4 flex items-baseline gap-1.5 sm:gap-2">
+            <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{{ completedTasksCount }}</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400">Done</span>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Delivered successfully</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 sm:mt-2 line-clamp-1 sm:line-clamp-none">Delivered</p>
         </div>
       </div>
 
       <!-- Tasks Workspace Controls -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-        <div class="relative flex-1">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div class="relative flex-1 w-full">
           <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -514,11 +516,11 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
           />
         </div>
 
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto shrink-0 flex-wrap xs:flex-nowrap">
           <!-- Status Filter -->
           <select
             v-model="statusFilter"
-            class="px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-teal-500"
+            class="flex-1 sm:flex-initial px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-teal-500"
           >
             <option value="All">All Statuses</option>
             <option value="Todo">Todo</option>
@@ -529,7 +531,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
           <!-- Priority Filter -->
           <select
             v-model="priorityFilter"
-            class="px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-teal-500"
+            class="flex-1 sm:flex-initial px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-teal-500"
           >
             <option value="All">All Priorities</option>
             <option value="High">High</option>
@@ -538,7 +540,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
           </select>
 
           <!-- View Mode Toggle -->
-          <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+          <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0">
             <button
               type="button"
               class="p-1.5 rounded-lg text-xs font-medium transition"
@@ -575,15 +577,15 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
       <!-- Empty State -->
       <div
         v-if="myFilteredTasks.length === 0"
-        class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-12 text-center shadow-xs"
+        class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8 sm:p-12 text-center shadow-xs flex flex-col items-center justify-center"
       >
-        <div class="w-16 h-16 mx-auto rounded-3xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-4">
-          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-4 shrink-0">
+          <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="9 11 12 14 22 4" />
             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
           </svg>
         </div>
-        <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
           No Tasks Found
         </h3>
         <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
@@ -599,11 +601,11 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
       </div>
 
       <!-- Cards View -->
-      <div v-else-if="viewMode === 'cards'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div v-else-if="viewMode === 'cards'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         <div
           v-for="task in myFilteredTasks"
           :key="task.id"
-          class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between"
+          class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between"
         >
           <div>
             <div class="flex items-center justify-between gap-3 mb-2.5">
@@ -638,7 +640,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
               </div>
             </div>
 
-            <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">
+            <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
               {{ task.title }}
             </h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
@@ -646,7 +648,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
             </p>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-1.5 text-slate-400">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -672,11 +674,11 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
       </div>
 
       <!-- Kanban View -->
-      <div v-else-if="viewMode === 'kanban'" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div v-else-if="viewMode === 'kanban'" class="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible gap-3.5 sm:gap-5 pb-2 md:pb-0 scrollbar-thin">
         <div
           v-for="col in ['Todo', 'In Progress', 'Completed'] as const"
           :key="col"
-          class="bg-slate-100/70 dark:bg-slate-900/50 rounded-3xl p-4 border border-slate-200/60 dark:border-slate-800/60 flex flex-col min-h-[380px]"
+          class="min-w-[270px] xs:min-w-[300px] flex-1 md:min-w-0 bg-slate-100/70 dark:bg-slate-900/50 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 border border-slate-200/60 dark:border-slate-800/60 flex flex-col min-h-[380px]"
         >
           <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/60 dark:border-slate-800">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
@@ -691,7 +693,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
             <div
               v-for="task in myFilteredTasks.filter(t => t.status === col)"
               :key="task.id"
-              class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition"
+              class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition"
             >
               <div class="flex items-center justify-between gap-2 mb-2">
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getPriorityBadgeClass(task.priority)">
@@ -760,12 +762,12 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
     <!-- Modal: Create / Edit Task -->
     <div
       v-if="isTaskModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
+      class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
       @click.self="isTaskModalOpen = false"
     >
-      <div class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
-        <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+      <div class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-3.5 sm:pb-4 border-b border-slate-100 dark:border-slate-800">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
             {{ taskToEdit ? 'Edit My Task' : 'Create New Task' }}
           </h2>
           <button
@@ -803,7 +805,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
             ></textarea>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300 mb-1">
                 Priority
@@ -832,7 +834,7 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
               </select>
             </div>
 
-            <div>
+            <div class="xs:col-span-2 sm:col-span-1">
               <label class="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300 mb-1">
                 Due Date
               </label>
@@ -844,17 +846,17 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
             </div>
           </div>
 
-          <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+          <div class="pt-4 flex flex-col-reverse xs:flex-row items-center justify-end gap-2.5 sm:gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
-              class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              class="w-full xs:w-auto px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
               @click="isTaskModalOpen = false"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-sm font-semibold text-white shadow-md shadow-teal-600/20"
+              class="w-full xs:w-auto px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-sm font-semibold text-white shadow-md shadow-teal-600/20 transition active:scale-95"
             >
               {{ taskToEdit ? 'Save Changes' : 'Create Task' }}
             </button>
@@ -866,39 +868,43 @@ function getStatusBadgeClass(status: EmployeeTask['status']) {
     <!-- Modal: Confirm Delete Task -->
     <div
       v-if="isDeleteModalOpen && taskToDelete"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
+      class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
       @click.self="isDeleteModalOpen = false"
     >
-      <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl">
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex items-start gap-3.5 sm:gap-4">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
           </div>
           <div>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Delete Task?</h3>
-            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Delete Task?</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
               Are you sure you want to delete "<strong>{{ taskToDelete.title }}</strong>"? This action cannot be undone.
             </p>
           </div>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse xs:flex-row items-center justify-end gap-2.5 sm:gap-3">
           <button
             type="button"
-            class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+            class="w-full xs:w-auto px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             @click="isDeleteModalOpen = false"
           >
             Cancel
           </button>
           <button
             type="button"
-            class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-sm font-semibold text-white shadow-md shadow-rose-600/25"
+            class="w-full xs:w-auto px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-sm font-semibold text-white shadow-md shadow-rose-600/25 transition active:scale-95 flex items-center justify-center gap-1.5"
             @click="confirmDelete"
           >
-            Delete Task
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            <span>Delete Task</span>
           </button>
         </div>
       </div>

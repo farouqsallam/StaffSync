@@ -51,12 +51,12 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="flex-1 flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-5rem)]">
-    <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none p-8 sm:p-10 md:p-12 transition-all">
+  <div class="flex-1 flex items-center justify-center py-6 sm:py-10 px-3.5 sm:px-6 lg:px-8 min-h-[calc(100vh-4.5rem)]">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none p-5 xs:p-7 sm:p-10 md:p-12 transition-all">
       <!-- Header -->
-      <div class="text-center mb-8 sm:mb-10">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-4 shadow-inner">
-          <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="text-center mb-6 sm:mb-8">
+        <div class="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-3 sm:mb-4 shadow-inner">
+          <svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
@@ -64,7 +64,7 @@ const onSubmit = handleSubmit(async (values) => {
         <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
           Sign In
         </h2>
-        <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-2">
+        <p class="text-xs sm:text-base text-slate-500 dark:text-slate-400 mt-1.5 sm:mt-2">
           Access your StaffSync account
         </p>
       </div>
@@ -72,7 +72,7 @@ const onSubmit = handleSubmit(async (values) => {
       <!-- Success Alert -->
       <div
         v-if="successMessage"
-        class="flex items-center gap-3 p-4 mb-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm font-medium animate-fade-in"
+        class="flex items-center gap-2.5 sm:gap-3 p-3.5 sm:p-4 mb-5 sm:mb-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs sm:text-sm font-medium animate-fade-in"
       >
         <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -84,7 +84,7 @@ const onSubmit = handleSubmit(async (values) => {
       <!-- Error Alert -->
       <div
         v-if="authStore.error"
-        class="flex items-start gap-3 p-4 mb-6 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-sm animate-fade-in"
+        class="flex items-start gap-2.5 sm:gap-3 p-3.5 sm:p-4 mb-5 sm:mb-6 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs sm:text-sm animate-fade-in"
       >
         <svg class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <circle cx="12" cy="12" r="10" />
@@ -102,9 +102,9 @@ const onSubmit = handleSubmit(async (values) => {
       </div>
 
       <!-- Login Form -->
-      <form @submit.prevent="onSubmit" class="flex flex-col gap-6">
+      <form @submit.prevent="onSubmit" class="flex flex-col gap-4 sm:gap-5">
         <!-- Username field -->
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1.5 sm:gap-2">
           <label for="username" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Username
           </label>
@@ -122,16 +122,16 @@ const onSubmit = handleSubmit(async (values) => {
               type="text"
               placeholder="Enter your username"
               autocomplete="username"
-              class="w-full pl-11 pr-4 py-3.5 bg-transparent text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 outline-none"
+              class="w-full pl-11 pr-4 py-3 sm:py-3.5 bg-transparent text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 outline-none"
             />
           </div>
-          <p v-if="usernameError" class="text-xs font-medium text-rose-500 mt-1">
+          <p v-if="usernameError" class="text-xs font-medium text-rose-500 mt-0.5">
             {{ usernameError }}
           </p>
         </div>
 
         <!-- Password field -->
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1.5 sm:gap-2">
           <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Password
           </label>
@@ -149,7 +149,7 @@ const onSubmit = handleSubmit(async (values) => {
               :type="showPassword ? 'text' : 'password'"
               placeholder="••••••••"
               autocomplete="current-password"
-              class="w-full pl-11 pr-11 py-3.5 bg-transparent text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 outline-none"
+              class="w-full pl-11 pr-11 py-3 sm:py-3.5 bg-transparent text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 outline-none"
             />
             <button
               type="button"
@@ -167,7 +167,7 @@ const onSubmit = handleSubmit(async (values) => {
               </svg>
             </button>
           </div>
-          <p v-if="passwordError" class="text-xs font-medium text-rose-500 mt-1">
+          <p v-if="passwordError" class="text-xs font-medium text-rose-500 mt-0.5">
             {{ passwordError }}
           </p>
         </div>
@@ -175,7 +175,7 @@ const onSubmit = handleSubmit(async (values) => {
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full mt-2 py-3.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white text-base font-semibold shadow-md shadow-emerald-600/25 transition-all flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:cursor-not-allowed"
+          class="w-full mt-2 py-3 sm:py-3.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white text-sm sm:text-base font-semibold shadow-md shadow-emerald-600/25 transition-all flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:cursor-not-allowed"
           :disabled="authStore.isLoading"
         >
           <span

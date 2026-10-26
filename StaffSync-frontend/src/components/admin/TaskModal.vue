@@ -101,35 +101,35 @@ function handleSubmit() {
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
+    class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in"
     @click.self="emit('close')"
   >
     <div
-      class="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+      class="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh] scrollbar-thin"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-        <div class="flex items-center gap-3">
+      <div class="flex items-start xs:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3 min-w-0">
           <div
-            class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center"
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 11l3 3L22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
           </div>
-          <div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+          <div class="min-w-0">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white truncate">
               {{ taskToEdit ? 'Edit Task Assignment' : 'Create & Assign Task' }}
             </h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
               Set deliverables, assign personnel, and target delivery deadline
             </p>
           </div>
         </div>
         <button
           type="button"
-          class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0"
           @click="emit('close')"
         >
           &times;
@@ -137,7 +137,7 @@ function handleSubmit() {
       </div>
 
       <!-- Form -->
-      <form @submit.prevent="handleSubmit" class="mt-6 space-y-4">
+      <form @submit.prevent="handleSubmit" class="mt-5 sm:mt-6 space-y-4">
         <!-- Title -->
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
@@ -187,7 +187,7 @@ function handleSubmit() {
         </div>
 
         <!-- Priority & Status & Due Date -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-4">
           <!-- Priority (Low, Medium, High) -->
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
@@ -219,7 +219,7 @@ function handleSubmit() {
           </div>
 
           <!-- Due Date -->
-          <div>
+          <div class="xs:col-span-2 sm:col-span-1">
             <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
               Target Deadline
             </label>
@@ -232,17 +232,17 @@ function handleSubmit() {
         </div>
 
         <!-- Action Buttons -->
-        <div class="pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+        <div class="pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse xs:flex-row items-stretch xs:items-center justify-end gap-2.5 sm:gap-3">
           <button
             type="button"
-            class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            class="w-full xs:w-auto text-center justify-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             @click="emit('close')"
           >
             Cancel
           </button>
           <button
             type="submit"
-            class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-sm font-semibold text-white shadow-md shadow-amber-600/25 transition active:scale-95"
+            class="w-full xs:w-auto text-center justify-center px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-sm font-semibold text-white shadow-md shadow-amber-600/25 transition active:scale-95"
           >
             {{ taskToEdit ? 'Save Changes' : 'Assign Task' }}
           </button>
