@@ -57,6 +57,10 @@ grails:
     enabled: true
     allowedOrigins:
       - 'http://localhost:5173' # Your Vue Vite port
+      - 'http://localhost'
+      - 'http://localhost:80'
+      - 'http://127.0.0.1'
+      - 'http://127.0.0.1:80'
     allowedMethods:
       - GET
       - POST
@@ -149,8 +153,10 @@ environments:
       url: jdbc:h2:mem:testDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
   production:
     dataSource:
-      dbCreate: none
-      url: jdbc:postgresql://localhost:5432/staffsync_db
+      dbCreate: update
+      url: jdbc:postgresql://db:5432/staffsync_prod
+      username: admin
+      password: securepassword
       properties:
         jmxEnabled: true
         initialSize: 5

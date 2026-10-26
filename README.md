@@ -1,42 +1,75 @@
-
 # StaffSync
 
-StaffSync is a full-stack, role-based employee management platform designed to streamline administrative oversight and employee task tracking. The system provides separate, secure experiences for Administrators and Employees, featuring interactive data visualization and robust data validation.
+StaffSync is a modern, containerized full-stack application designed for efficient organizational management. It features a robust Role-Based Access Control (RBAC) system that separates administrative oversight from individual employee task management.
 
-## Tech Stack
+## 🚀 Core Features
 
-**Frontend:**
-* Vue 3 (Composition API) powered by Vite
-* PrimeVue & Tailwind CSS for UI components and styling
-* Pinia for global state management (Authentication & User Data)
-* Vue Router for protected route navigation
-* Vee-Validate for frontend schema-based form validation
-* Chart.js (via PrimeVue) for dashboard data visualization
+StaffSync operates with two primary user roles, each with strictly enforced permissions:
 
-**Backend:**
-* Grails 7.2.4 (REST API Profile)
-* Groovy 
-* PostgreSQL for relational data storage
-* Spring Security REST for JWT-based authentication
+### 👑 Administrator Role
+Administrators have full CRUD (Create, Read, Update, Delete) access across the entire system.
+* **User Management:** Create new users, edit details, delete users, and promote standard employees to Administrator status.
+* **Department Management:** Create, edit, and delete organizational departments.
+* **Global Task Management:** Oversee, assign, edit, and delete tasks for any user in the system.
 
-## Core Functionality
+### 👤 Employee Role
+Employees have a focused, restricted workspace.
+* **Personal Task Management:** When logged in, employees can only view, create, edit, and delete their *own* tasks. They are completely sandboxed from other users' tasks and organizational settings.
 
-### Role-Based Access Control (RBAC)
-* **Authentication:** Secure login system utilizing JSON Web Tokens (JWT).
-* **Route Protection:** Frontend routing and backend endpoints are strictly isolated based on user roles.
+## 🛠️ Tech Stack
 
-### Admin Experience
-* **Global Dashboard:** Visual analytics and charts displaying aggregated company metrics (e.g., employee headcounts, task completion rates).
-* **Staff Management:** Full CRUD (Create, Read, Update, Delete) capabilities for employee records. 
-* **Role Assignment:** Ability to promote employees to administrative roles or restrict access.
-* **Data Tables:** Advanced data tables featuring sorting, pagination, and filtering for large employee datasets.
+This project is built using a modern, scalable, and fully containerized architecture:
 
-### Employee Experience
-* **Personal Dashboard:** A focused view displaying the employee's specific profile, assigned tasks, and daily metrics.
-* **Profile Management:** Secure environment for employees to view and update their own authorized personal information.
-* **Task/Attendance Tracking:** Interfaces dedicated to managing individual workflow and reporting.
+* **Frontend:** Vue.js 3 (Composition API), Vite, Axios, Pinia State Management
+* **Backend:** Grails 7 Framework, Spring Security REST (JWT Authentication), Java 21
+* **Database:** PostgreSQL 15
+* **Orchestration & Serving:** Docker, Docker Compose, Nginx
 
-## Architecture Highlights
-* **Separation of Concerns:** Completely decoupled frontend and backend communicating exclusively via RESTful JSON endpoints.
-* **Responsive Design:** Mobile-first, fully responsive user interface utilizing Tailwind CSS utility classes alongside PrimeVue components.
-* **Form Integrity:** Comprehensive data validation handled on both the client side (Vee-Validate) and server side (Grails domain constraints) to ensure database integrity.
+## ⚙️ How to Run the Application
+
+The entire application (Database, Backend API, and Frontend web server) is orchestrated via Docker Compose. You do not need Java, Node.js, or PostgreSQL installed on your host machine—only Docker.
+
+### Prerequisites
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac) or Docker Engine (Linux) installed and running.
+
+### Quick Start
+
+1. Clone the repository and navigate to the root directory containing the `docker-compose.yml` file.
+2. Open your terminal and run the following command to build and launch the application:
+
+   ```bash
+   docker-compose up -d --build
+   ```
+
+3. **Wait a few moments:** The database will initialize, the Vue frontend will bundle, and the Grails Java backend will compile and boot up (this usually takes 15-30 seconds on the first run).
+
+### Accessing the Application
+
+Once the containers are successfully running, you can access the application via your browser:
+
+* **Frontend UI (Vue/Nginx):** [http://localhost](http://localhost)
+* **Backend API (Grails):** [http://localhost:8080](http://localhost:8080)
+
+*Note: If port 80 is in use on your Windows machine (e.g., by IIS or Skype), you may need to map the frontend to a different port in the `docker-compose.yml` file (e.g., `"8081:80"`).*
+
+## 🔐 Default Credentials
+
+The database is automatically seeded with an initial Administrator account on startup. Use these credentials to log in and begin managing the system:
+
+* **Username:** `admin`
+* **Password:** `password123`
+
+## 🛑 Stopping the Application
+
+To safely stop the application without losing your database data (which is saved in a persistent Docker volume):
+
+```bash
+docker-compose stop
+```
+
+To completely tear down the containers and networks:
+
+```bash
+docker-compose down
+```
+*(Add the `-v` flag if you wish to wipe the database volume entirely).*

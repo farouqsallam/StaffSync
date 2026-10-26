@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: staffsync-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: securepassword
+      POSTGRES_DB: staffsync_prod
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d staffsync_prod"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./StaffSync-backend
+    container_name: staffsync-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - GRAILS_ENV=production
+      - DATASOURCE_URL=jdbc:postgresql://db:5432/staffsync_prod
+      - DATASOURCE_USERNAME=admin
+      - DATASOURCE_PASSWORD=securepassword
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/staffsync_prod
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=securepassword
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./StaffSync-frontend
+    container_name: StaffSync-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
